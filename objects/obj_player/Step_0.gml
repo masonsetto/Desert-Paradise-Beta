@@ -41,35 +41,35 @@ if (!variable_global_exists("placing_house"))
 	global.placing_house = false;
 }
 
+var world_mouse_x = mouse_x + camera_get_view_x(view_camera[0]);
+var world_mouse_y = mouse_y + camera_get_view_y(view_camera[0]);
+
+global.snapped_x = round(world_mouse_x / 32) * 32;
+global.snapped_y = round(world_mouse_y / 32) * 32;
+
 if (global.placing_tree)
 {
-	draw_sprite_ext(spr_tree, 0, camera_get_view_x(view_camera[0]) + mouse_x, camera_get_view_y(view_camera[0]) + mouse_y, 1, 1, 0, c_white, 0.5);
-	
 	if (mouse_check_button_pressed(mb_left))
 	{
-		instance_create_layer(mouse_x + camera_get_view_x(view_camera[0]), mouse_y + camera_get_view_y(view_camera[0]), "Instances", obj_tree);
+		instance_create_layer(global.snapped_x, global.snapped_y, "Instances", obj_tree);
 		global.placing_tree = false;
 	}
 }
 
 if (global.placing_road)
 {
-	draw_sprite_ext(spr_road, 0, camera_get_view_x(view_camera[0]) + mouse_x, camera_get_view_y(view_camera[0]) + mouse_y, 1, 1, 0, c_white, 0.5);
-	
 	if (mouse_check_button_pressed(mb_left))
 	{
-		instance_create_layer(mouse_x + camera_get_view_x(view_camera[0]), mouse_y + camera_get_view_y(view_camera[0]), "Instances", obj_road);
+		instance_create_layer(global.snapped_x, global.snapped_y, "Instances", obj_road);
 		global.placing_road = false;
 	}
 }
 
 if (global.placing_house)
 {
-	draw_sprite_ext(spr_house, 0, camera_get_view_x(view_camera[0]) + mouse_x, camera_get_view_y(view_camera[0]) + mouse_y, 1, 1, 0, c_white, 0.5);
-	
 	if (mouse_check_button_pressed(mb_left))
 	{
-		instance_create_layer(mouse_x + camera_get_view_x(view_camera[0]), mouse_y + camera_get_view_y(view_camera[0]), "Instances", obj_house);
+		instance_create_layer(global.snapped_x, global.snapped_y, "Instances", obj_house);
 		global.placing_house = false;
 	}
 }
