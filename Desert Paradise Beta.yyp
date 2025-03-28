@@ -42,7 +42,6 @@
     {"id":{"name":"obj_player","path":"objects/obj_player/obj_player.yy",},},
     {"id":{"name":"obj_road_button","path":"objects/obj_road_button/obj_road_button.yy",},},
     {"id":{"name":"obj_road","path":"objects/obj_road/obj_road.yy",},},
-    {"id":{"name":"obj_temp_hud","path":"objects/obj_temp_hud/obj_temp_hud.yy",},},
     {"id":{"name":"obj_tree_button","path":"objects/obj_tree_button/obj_tree_button.yy",},},
     {"id":{"name":"obj_tree","path":"objects/obj_tree/obj_tree.yy",},},
     {"id":{"name":"obj_wall","path":"objects/obj_wall/obj_wall.yy",},},

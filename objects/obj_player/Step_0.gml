@@ -1,8 +1,12 @@
 // current bugs:
 // placing trees while camera is anywhere other than its original position does not work
-// placement preview that follows mouse not working
 // currently the camera is set to see the entire map, but we may want it to be zoomed in and follow player, which we can do easily by changing how big the camera is but placement doesn't work
 // we also need to put all this placement on a grid system so each tile snaps to the grid
+
+// ideas:
+// have a road system already laid out on the map for the player to build around- this way the thrid object being built is turning existing roads into cool pavement instead of building another road
+// two ways to cool down city because default roads generate heat: cool pavement or planting trees near road
+// enemy player can defeat: scorpion (teach player about desert wildlife) (add more enemies if you have time) (enemies drop resources) (enemies could also go for player or focus on destroying an object)
 
 right_key = keyboard_check(ord("D"));
 left_key = keyboard_check(ord("A"));
@@ -51,8 +55,16 @@ if (global.placing_tree)
 {
 	if (mouse_check_button_pressed(mb_left))
 	{
-		instance_create_layer(global.snapped_x, global.snapped_y, "Instances", obj_tree);
-		global.placing_tree = false;
+		var tree_width = sprite_get_width(spr_tree);
+		var tree_height = sprite_get_height(spr_tree);
+		
+		if (!position_meeting(global.snapped_x, global.snapped_y, obj_tree) &&
+			!position_meeting(global.snapped_x, global.snapped_y, obj_road) &&
+			!position_meeting(global.snapped_x, global.snapped_y, obj_house))
+		{
+			instance_create_layer(global.snapped_x, global.snapped_y, "Instances", obj_tree);
+			global.placing_tree = false;
+		}
 	}
 }
 
@@ -60,8 +72,13 @@ if (global.placing_road)
 {
 	if (mouse_check_button_pressed(mb_left))
 	{
-		instance_create_layer(global.snapped_x, global.snapped_y, "Instances", obj_road);
-		global.placing_road = false;
+		if (!position_meeting(global.snapped_x, global.snapped_y, obj_tree) &&
+			!position_meeting(global.snapped_x, global.snapped_y, obj_road) &&
+			!position_meeting(global.snapped_x, global.snapped_y, obj_house))
+		{
+			instance_create_layer(global.snapped_x, global.snapped_y, "Instances", obj_road);
+			global.placing_road = false;
+		}
 	}
 }
 
@@ -69,7 +86,12 @@ if (global.placing_house)
 {
 	if (mouse_check_button_pressed(mb_left))
 	{
-		instance_create_layer(global.snapped_x, global.snapped_y, "Instances", obj_house);
-		global.placing_house = false;
+		if (!position_meeting(global.snapped_x, global.snapped_y, obj_tree) &&
+			!position_meeting(global.snapped_x, global.snapped_y, obj_road) &&
+			!position_meeting(global.snapped_x, global.snapped_y, obj_house))
+		{
+			instance_create_layer(global.snapped_x, global.snapped_y, "Instances", obj_house);
+			global.placing_house = false;
+		}
 	}
 }
