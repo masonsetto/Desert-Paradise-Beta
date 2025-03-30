@@ -17,7 +17,7 @@ var mouse_y_pos = device_mouse_y_to_gui(0);
 if (clicked)
 {
 	image_index = 2;
-	global.placing_road = true;
+	global.placing_cool_pavement = true;
 }
 else if (hovering)
 {

@@ -6,7 +6,6 @@
 // ideas:
 // have a road system already laid out on the map for the player to build around- this way the thrid object being built is turning existing roads into cool pavement instead of building another road
 // two ways to cool down city because default roads generate heat: cool pavement or planting trees near road
-// enemy player can defeat: scorpion (teach player about desert wildlife) (add more enemies if you have time) (enemies drop resources) (enemies could also go for player or focus on destroying an object)
 
 right_key = keyboard_check(ord("D"));
 left_key = keyboard_check(ord("A"));
@@ -35,9 +34,9 @@ if (!variable_global_exists("placing_tree"))
 	global.placing_tree = false;
 }
 
-if (!variable_global_exists("placing_road"))
+if (!variable_global_exists("placing_cool_pavement"))
 {
-	global.placing_road = false;
+	global.placing_cool_pavement = false;
 }
 
 if (!variable_global_exists("placing_house"))
@@ -48,36 +47,53 @@ if (!variable_global_exists("placing_house"))
 var world_mouse_x = mouse_x + camera_get_view_x(view_camera[0]);
 var world_mouse_y = mouse_y + camera_get_view_y(view_camera[0]);
 
-global.snapped_x = round(world_mouse_x / 32) * 32;
-global.snapped_y = round(world_mouse_y / 32) * 32;
+var grid_x = world_mouse_x div global.grid_size;
+var grid_y = world_mouse_y div global.grid_size;
+
+global.snapped_x = grid_x * global.grid_size;
+global.snapped_y = grid_y * global.grid_size;
 
 if (global.placing_tree)
 {
 	if (mouse_check_button_pressed(mb_left))
 	{
-		var tree_width = sprite_get_width(spr_tree);
-		var tree_height = sprite_get_height(spr_tree);
+		var placement_x = grid_x * global.grid_size;
+		var placement_y = grid_y * global.grid_size;
 		
-		if (!position_meeting(global.snapped_x, global.snapped_y, obj_tree) &&
-			!position_meeting(global.snapped_x, global.snapped_y, obj_road) &&
-			!position_meeting(global.snapped_x, global.snapped_y, obj_house))
+		var house_width = sprite_get_width(spr_tree);
+		var house_height = sprite_get_height(spr_tree);
+		
+		var collision_present = collision_rectangle(placement_x, placement_y, placement_x + sprite_get_width(spr_tree), placement_y + sprite_get_width(spr_tree), obj_tree, false, false) ||
+								collision_rectangle(placement_x, placement_y, placement_x + sprite_get_width(spr_tree), placement_y + sprite_get_width(spr_tree), obj_house, false, false) ||
+								collision_rectangle(placement_x, placement_y, placement_x + sprite_get_width(spr_tree), placement_y + sprite_get_width(spr_tree), obj_road, false, false);
+		
+		if (!collision_present && global.grid[grid_x, grid_y] == 0)
 		{
-			instance_create_layer(global.snapped_x, global.snapped_y, "Instances", obj_tree);
+			instance_create_layer(grid_x * global.grid_size, grid_y * global.grid_size, "Instances", obj_tree);
+			global.grid[grid_x, grid_y] = 1;
 			global.placing_tree = false;
 		}
 	}
 }
 
-if (global.placing_road)
+if (global.placing_cool_pavement)
 {
 	if (mouse_check_button_pressed(mb_left))
 	{
-		if (!position_meeting(global.snapped_x, global.snapped_y, obj_tree) &&
-			!position_meeting(global.snapped_x, global.snapped_y, obj_road) &&
-			!position_meeting(global.snapped_x, global.snapped_y, obj_house))
+		var placement_x = grid_x * global.grid_size;
+		var placement_y = grid_y * global.grid_size;
+		
+		var cool_pavement_width = sprite_get_width(spr_cool_pavement);
+		var cool_pavement_height = sprite_get_height(spr_cool_pavement);
+		
+		var road_collision_present = collision_rectangle(placement_x, placement_y, placement_x + sprite_get_width(spr_cool_pavement), placement_y + sprite_get_width(spr_cool_pavement), obj_road, false, false);
+		var cool_pavement_collision_present = collision_rectangle(placement_x, placement_y, placement_x + sprite_get_width(spr_cool_pavement), placement_y + sprite_get_width(spr_cool_pavement), obj_cool_pavement, false, false);
+		
+		if (road_collision_present && !cool_pavement_collision_present)
 		{
-			instance_create_layer(global.snapped_x, global.snapped_y, "Instances", obj_road);
-			global.placing_road = false;
+			instance_create_layer(grid_x * global.grid_size, grid_y * global.grid_size, "Instances", obj_cool_pavement);
+			global.grid[grid_x, grid_y] = 1;
+			global.placing_cool_pavement = false;
 		}
 	}
 }
@@ -86,11 +102,20 @@ if (global.placing_house)
 {
 	if (mouse_check_button_pressed(mb_left))
 	{
-		if (!position_meeting(global.snapped_x, global.snapped_y, obj_tree) &&
-			!position_meeting(global.snapped_x, global.snapped_y, obj_road) &&
-			!position_meeting(global.snapped_x, global.snapped_y, obj_house))
+		var placement_x = grid_x * global.grid_size;
+		var placement_y = grid_y * global.grid_size;
+		
+		var house_width = sprite_get_width(spr_house);
+		var house_height = sprite_get_height(spr_house);
+		
+		var collision_present = collision_rectangle(placement_x, placement_y, placement_x + sprite_get_width(spr_house), placement_y + sprite_get_width(spr_house), obj_tree, false, false) ||
+								collision_rectangle(placement_x, placement_y, placement_x + sprite_get_width(spr_house), placement_y + sprite_get_width(spr_house), obj_house, false, false) ||
+								collision_rectangle(placement_x, placement_y, placement_x + sprite_get_width(spr_house), placement_y + sprite_get_width(spr_house), obj_road, false, false);
+		
+		if (!collision_present && global.grid[grid_x, grid_y] == 0)
 		{
-			instance_create_layer(global.snapped_x, global.snapped_y, "Instances", obj_house);
+			instance_create_layer(grid_x * global.grid_size, grid_y * global.grid_size, "Instances", obj_house);
+			global.grid[grid_x, grid_y] = 1;
 			global.placing_house = false;
 		}
 	}

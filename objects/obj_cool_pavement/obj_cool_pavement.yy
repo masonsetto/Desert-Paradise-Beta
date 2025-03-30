@@ -1,9 +1,9 @@
 {
   "$GMObject":"",
-  "%Name":"obj_tree",
+  "%Name":"obj_cool_pavement",
   "eventList":[],
   "managed":true,
-  "name":"obj_tree",
+  "name":"obj_cool_pavement",
   "overriddenProperties":[],
   "parent":{
     "name":"Objects",
@@ -26,10 +26,10 @@
   "properties":[],
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
-  "solid":true,
+  "solid":false,
   "spriteId":{
-    "name":"spr_tree",
-    "path":"sprites/spr_tree/spr_tree.yy",
+    "name":"spr_cool_pavement",
+    "path":"sprites/spr_cool_pavement/spr_cool_pavement.yy",
   },
   "spriteMaskId":null,
   "visible":true,
